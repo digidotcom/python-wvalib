@@ -58,3 +58,6 @@ target/
 
 # PyCharm
 .idea
+
+# The README.rst is generated from README.md, so we don't want it checked in
+README.rst
