@@ -16,7 +16,43 @@ class WVAHttpClient(object):
         self._hostname = hostname
         self._username = username
         self._password = password
-        self._use_https = username
+        self._use_https = use_https
+        self._session = None
+
+    @property
+    def hostname(self):
+        return self._hostname
+
+    @hostname.setter
+    def hostname(self, hostname):
+        self._hostname = hostname
+        self._session = None  # invalidate the current session
+
+    @property
+    def username(self):
+        return self._username
+
+    @username.setter
+    def username(self, username):
+        self._username = username
+        self._session = None  # invalidate the current session
+
+    @property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, password):
+        self._password = password
+        self._session = None  # invalidate the current session
+
+    @property
+    def use_https(self):
+        return self._use_https
+
+    @use_https.setter
+    def use_https(self, use_https):
+        self._use_https = use_https
         self._session = None
 
     def _get_session(self):
@@ -64,8 +100,40 @@ class WVAHttpClient(object):
 
 class WVA(object):
 
-    def __init__(self, hostname, username, password):
-        self._client = WVAHttpClient(hostname, username, password)
+    def __init__(self, hostname, username, password, use_https=True):
+        self._client = WVAHttpClient(hostname, username, password, use_https)
+
+    @property
+    def hostname(self):
+        return self._client.hostname
+
+    @hostname.setter
+    def hostname(self, hostname):
+        self._client._hostname = hostname
+
+    @property
+    def username(self):
+        return self._client.username
+
+    @username.setter
+    def username(self, username):
+        self._client.username = username
+
+    @property
+    def password(self):
+        return self._client.password
+
+    @password.setter
+    def password(self, password):
+        self._client.password = password
+
+    @property
+    def use_https(self):
+        return self._client.use_https
+
+    @use_https.setter
+    def use_https(self, use_https):
+        self._client.use_https = use_https
 
     def get(self, relpath, **kwargs):
         return self._client.get(relpath, **kwargs)
