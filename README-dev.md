@@ -57,6 +57,14 @@ If you run into problems, you may need to install some additional
 dependencies as described
 [in the pyenv documentation](https://github.com/yyuu/pyenv/wiki/Common-build-problems).
 
+Once you have run toxtests.sh successfully once, you can quickly test
+with a specific version of the interpreter by running nosetests out of
+the tox environment for the desired version of the interpreter:
+
+```
+$ .tox/py34/bin/nosetests .
+```
+
 Coding Standards
 ----------------
 

@@ -46,11 +46,11 @@ class WVATestBase(unittest.TestCase):
 
 
 class TestWVABasicRequestMethods(WVATestBase):
+
     def _get_username_pass(self, request):
         authorization = request.headers.get("authorization")  # e.g. "Basic <base64>"
-        b64encoded = authorization.split(" ", 1)[1]  # e.g. user:pass
-        username, password = base64.b64decode(b64encoded).split(":")
-        return username, password
+        b64encoded = six.b(authorization.split(" ", 1)[1])  # e.g. user:pass
+        return base64.b64decode(b64encoded).split(six.b(":"))
 
     def test_username_changed(self):
         self.test_json_get()  # use the existing credentials once
@@ -61,8 +61,8 @@ class TestWVABasicRequestMethods(WVATestBase):
         self.assertEqual(self.wva.get("testing/1/2/3"), {"this": "is a test"})  # from previous test
         req = self._get_last_request()
         username, password = self._get_username_pass(req)
-        self.assertEqual(username, "bob")
-        self.assertEqual(password, "pass")
+        self.assertEqual(username, six.b("bob"))
+        self.assertEqual(password, six.b("pass"))
 
     def test_password_changed(self):
         self.test_json_get()
@@ -71,8 +71,8 @@ class TestWVABasicRequestMethods(WVATestBase):
         self.assertEqual(self.wva.get("testing/1/2/3"), {"this": "is a test"})  # from previous test
         req = self._get_last_request()
         username, password = self._get_username_pass(req)
-        self.assertEqual(username, "user")
-        self.assertEqual(password, "DragonDove")
+        self.assertEqual(username, six.b("user"))
+        self.assertEqual(password, six.b("DragonDove"))
 
     def test_use_https_changed(self):
         self.test_json_get()
