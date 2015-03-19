@@ -70,6 +70,17 @@ wva = WVA("<ip>", "user", "password")
 # ...
 ```
 
+Contributing and Developer Information
+--------------------------------------
+
+Contributions to the project are very welcome.  Please submit any
+issues you find on the github issue tracker.  If you have a change you
+would like to have included in the library, please submit a pull
+request.
+
+Information for developers on coding style, how to run the tests,
+etc. may be found in the [Developer's README](README-dev.md).
+
 License
 -------
 

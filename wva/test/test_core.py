@@ -4,6 +4,7 @@
 #
 # Copyright (c) 2015 Digi International Inc. All Rights Reserved.
 
+import six
 import json
 import unittest
 import httpretty
@@ -60,4 +61,4 @@ class TestWVABasicRequestMethods(WVATestBase):
     def test_json_post(self):
         self.prepare_json_response("POST", "/ws/post", {"error": "an error"})
         self.assertEqual(self.wva.post("post", {"my": "post request"}), {"error": "an error"})
-        self.assertEqual(self._get_last_request().body, '{"my": "post request"}')
+        self.assertEqual(self._get_last_request().body, six.b('{"my": "post request"}'))

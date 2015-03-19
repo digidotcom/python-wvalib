@@ -1,4 +1,6 @@
 -r requirements.txt
 
 pyandoc
+nose
+tox
 HTTPretty==0.8.8
