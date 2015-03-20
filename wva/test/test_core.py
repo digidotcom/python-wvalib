@@ -9,7 +9,6 @@ from wva.test.test_utilities import WVATestBase
 
 
 class TestWVA(WVATestBase):
-
     def test_construction(self):
         wva = WVA("host", "bob", "secrets")
         self.assertEqual(wva.hostname, "host")

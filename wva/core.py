@@ -3,7 +3,9 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright (c) 2015 Digi International Inc. All Rights Reserved.
+
 from wva.http_client import WVAHttpClient
+from wva.vehicle import VehicleDataElement
 
 
 class WVA(object):
@@ -46,11 +48,31 @@ class WVA(object):
         """Get a direct reference to the http client used by this WVA instance"""
         return self._http_client
 
-    def get_all_config(self):
-        config = {}
-        for path in self._http_client.get("config")["config"]:
-            if "factory_default" in path:
-                continue  # this one doesn't work
-            data = self._http_client.get(path)
-            config[path.split("/")[1]] = data
-        return config
+    def get_vehicle_data_element(self, name):
+        """Return a :class:`VehicleDataElement` with the given name
+
+        For example, if I wanted to get information about the speed of a vehicle,
+        I could do so by doing the following::
+
+            speed = wva.get_vehicle_data_element("VehicleSpeed")
+            print(speed.get_value())
+        """
+        return VehicleDataElement(self._http_client, name)
+
+
+    def get_vehicle_data_elements(self):
+        """Get a dictionary mapping names to :class:`VehicleData` instances
+
+        This result is based on the results of `GET /ws/vehicle/data` that returns a list
+        of URIs to each vehicle data element.  The value is a handle for accessing
+        additional information about a particular data element.
+
+        :raises WVAError: In the event of a problem retrieving the list of data elements
+        :returns: A dictionary of element names mapped to :class:`VehicleDataElement` instances.
+        """
+        # Response looks like: { "data": ['vehicle/data/ParkingBrake', ...] }
+        elements = {}
+        for uri in self.get_http_client().get("vehicle/data").get("data", []):
+            name = uri.split("/")[-1]
+            elements[name] = self.get_vehicle_data_element(name)
+        return elements
