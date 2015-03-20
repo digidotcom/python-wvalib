@@ -1,5 +1,8 @@
 -r requirements.txt
 
+# Install ourself (this allows developers to use the 'wva' cli command)
+--editable .
+
 pyandoc
 nose
 tox

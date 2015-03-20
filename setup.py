@@ -65,6 +65,9 @@ setup(
     author_email="paul.osborne@etherios.com",  # TODO: mailing list?
     packages=find_packages(),
     install_requires=open('requirements.txt').read().split(),
+    entry_points={
+        'console_scripts': ['wva=wva.cli:main']
+    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",

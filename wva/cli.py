@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -5,9 +7,11 @@
 # Copyright (c) 2015 Digi International Inc. All Rights Reserved.
 import json
 import pprint
+
 from core import WVA
 import click
 import os
+
 
 CONFIG_DIR = os.path.abspath(os.environ.get('WVA_CONFIGDIR', os.path.expanduser("~/.wva")))
 
@@ -107,5 +111,9 @@ def put(ctx, path, input_file):
     pprint.pprint(ctx.parent.wva.put(path, input_file.read()))
 
 
-if __name__ == '__main__':
+def main():
     cli(auto_envvar_prefix="WVA")
+
+
+if __name__ == "__main__":
+    main()
