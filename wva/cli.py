@@ -86,13 +86,15 @@ def cli(ctx, hostname, username, password, config_dir):
 @click.argument('path')
 @click.pass_context
 def get(ctx, path):
-    pprint.pprint(ctx.parent.wva.get(path))
+    http_client = ctx.parent.wva.get_http_client()
+    print(http_client.get(path))
 
 
 @cli.command()
 @click.argument('path')
 def delete(ctx, path):
-    pprint.pprint(ctx.parent.wva.delete(path))
+    http_client = ctx.parent.wva.get_http_client()
+    print(http_client.delete(path))
 
 
 @cli.command()
@@ -100,7 +102,8 @@ def delete(ctx, path):
 @click.argument('input_file', type=click.File())
 @click.pass_context
 def post(ctx, path, input_file):
-    pprint.pprint(ctx.parent.wva.post(path, input_file.read()))
+    http_client = ctx.parent.wva.get_http_client()
+    print(http_client.post(path, input_file.read()))
 
 
 @cli.command()
@@ -108,7 +111,8 @@ def post(ctx, path, input_file):
 @click.argument('input_file', type=click.File())
 @click.pass_context
 def put(ctx, path, input_file):
-    pprint.pprint(ctx.parent.wva.put(path, input_file.read()))
+    http_client = ctx.parent.wva.get_http_client()
+    print(http_client.put(path, input_file.read()))
 
 
 def main():
