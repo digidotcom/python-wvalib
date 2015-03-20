@@ -7,10 +7,12 @@
 # Copyright (c) 2015 Digi International Inc. All Rights Reserved.
 import json
 import pprint
+import time
 
 from core import WVA
 import click
 import os
+from wva.exceptions import WVAError, WVAHttpServiceUnavailableError
 
 
 def load_config(ctx):
@@ -62,6 +64,17 @@ def get_password(ctx, override_password=None):
     return get_config_value(ctx, 'password', 'Password', override_password, password=True)
 
 
+def get_root_ctx(ctx):
+    while True:
+        if hasattr(ctx, 'wva'):
+            return ctx
+        ctx = ctx.parent
+
+
+def get_wva(ctx):
+    return get_root_ctx(ctx).wva
+
+
 @click.group()
 @click.option('--hostname', default=None, help='Force use of the specified hostname')
 @click.option('--username', default=None, help='Force use of the specified username')
@@ -82,18 +95,19 @@ def cli(ctx, hostname, username, password, config_dir):
     ctx.wva = WVA(ctx.hostname, ctx.username, ctx.password)
 
 
+## Low-Level HTTP Access Commands
 @cli.command()
 @click.argument('path')
 @click.pass_context
 def get(ctx, path):
-    http_client = ctx.parent.wva.get_http_client()
+    http_client = get_wva(ctx).get_http_client()
     print(http_client.get(path))
 
 
 @cli.command()
 @click.argument('path')
 def delete(ctx, path):
-    http_client = ctx.parent.wva.get_http_client()
+    http_client = get_wva(ctx).get_http_client()
     print(http_client.delete(path))
 
 
@@ -102,7 +116,7 @@ def delete(ctx, path):
 @click.argument('input_file', type=click.File())
 @click.pass_context
 def post(ctx, path, input_file):
-    http_client = ctx.parent.wva.get_http_client()
+    http_client = get_wva(ctx).get_http_client()
     print(http_client.post(path, input_file.read()))
 
 
@@ -111,8 +125,56 @@ def post(ctx, path, input_file):
 @click.argument('input_file', type=click.File())
 @click.pass_context
 def put(ctx, path, input_file):
-    http_client = ctx.parent.wva.get_http_client()
+    http_client = get_wva(ctx).get_http_client()
     print(http_client.put(path, input_file.read()))
+
+
+## Vehicle Data Command Group (wva vehicle ...)
+@cli.group(short_help="Vehicle Data Commands")
+@click.pass_context
+def vehicle(ctx):
+    pass
+
+
+@vehicle.command(short_help="List available vehicle data items")
+@click.option("--value/--no-value", default=False, help="Get the currently value as well")
+@click.option('--timestamp/--no-timestamp', default=False, help="Also print the timestamp of the sample")
+@click.pass_context
+def list(ctx, value, timestamp):
+    for name, element in sorted(get_wva(ctx).get_vehicle_data_elements().items(), key=lambda (k, v): k):
+        if value:
+            try:
+                curval = element.sample()
+            except WVAHttpServiceUnavailableError:
+                print("{} (Unavailable)".format(name))
+            except WVAError, e:
+                print("{} (Error: {})".format(name, e))
+            else:
+                if timestamp:
+                    print("{} = {} at {}".format(name, curval.value, curval.timestamp.ctime()))
+                else:
+                    print("{} = {}".format(name, curval.value))
+        else:
+            print(name)
+
+
+@vehicle.command(short_help="Get the current value of a vehicle data element")
+@click.argument('element')
+@click.option('--timestamp/--no-timestamp', default=False, help="Also print the timestamp of the sample")
+@click.option('--repeat', default=1, help="How many times to sample")
+@click.option('--delay', default=0.5, help="Time to delay between samples in seconds")
+@click.pass_context
+def sample(ctx, element, timestamp, repeat, delay):
+    element = get_wva(ctx).get_vehicle_data_element(element)
+    for i in xrange(repeat):
+        curval = element.sample()
+        if timestamp:
+            print("{} at {}".format(curval.value, curval.timestamp.ctime()))
+        else:
+            print("{}".format(curval.value))
+
+        if i + 1 < repeat:  # do not delay on last iteration
+            time.sleep(delay)
 
 
 def main():
