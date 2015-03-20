@@ -13,29 +13,27 @@ import click
 import os
 
 
-CONFIG_DIR = os.path.abspath(os.environ.get('WVA_CONFIGDIR', os.path.expanduser("~/.wva")))
-
-
-def load_config():
+def load_config(ctx):
     try:
-        with open(os.path.join(CONFIG_DIR, "config.json")) as f:
+        with open(os.path.join(ctx.config_dir, "config.json")) as f:
             return json.load(f)
     except (IOError, ValueError):
         return {}
 
 
 def save_config(ctx):
-    if not os.path.exists(CONFIG_DIR):
-        os.makedirs(CONFIG_DIR)
+    if not os.path.exists(ctx.config_dir):
+        os.makedirs(ctx.config_dir)
 
     config = {
+        "version": 1,  # may be used for migration purposes
         "hostname": ctx.hostname,
         "username": ctx.username,
         "password": ctx.password,
     }
 
     # Write config to a file that is restricted to read/write access by current user
-    fd = os.open(os.path.join(CONFIG_DIR, "config.json"), os.O_WRONLY | os.O_CREAT, 0o0600)
+    fd = os.open(os.path.join(ctx.config_dir, "config.json"), os.O_WRONLY | os.O_CREAT, 0o0600)
     with os.fdopen(fd, 'w') as f:
         f.write(json.dumps(config, indent=2))
 
@@ -68,10 +66,12 @@ def get_password(ctx, override_password=None):
 @click.option('--hostname', default=None, help='Force use of the specified hostname')
 @click.option('--username', default=None, help='Force use of the specified username')
 @click.option('--password', default=None, help='Force use of the specified password')
+@click.option("--config-dir", default="~/.wva", help='Directory containing wva configuration files')
 @click.pass_context
-def cli(ctx, hostname, username, password):
-    ctx.config = load_config()
+def cli(ctx, hostname, username, password, config_dir):
     ctx.user_values_entered = False
+    ctx.config_dir = os.path.abspath(os.path.expanduser(config_dir))
+    ctx.config = load_config(ctx)
     ctx.hostname = get_hostname(ctx, hostname)
     ctx.username = get_username(ctx, username)
     ctx.password = get_password(ctx, password)
