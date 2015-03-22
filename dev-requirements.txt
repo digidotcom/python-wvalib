@@ -6,4 +6,6 @@
 pyandoc
 nose
 tox
+mock
+coverage
 HTTPretty==0.8.8

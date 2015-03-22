@@ -5,12 +5,15 @@
 # Copyright (c) 2015 Digi International Inc. All Rights Reserved.
 
 from wva.http_client import WVAHttpClient
+from wva.stream import WVAEventStream
+from wva.subscriptions import WVASubscription
 from wva.vehicle import VehicleDataElement
 
 
 class WVA(object):
     def __init__(self, hostname, username, password, use_https=True):
         self._http_client = WVAHttpClient(hostname, username, password, use_https)
+        self._event_stream = None
 
     @property
     def hostname(self):
@@ -76,3 +79,34 @@ class WVA(object):
             name = uri.split("/")[-1]
             elements[name] = self.get_vehicle_data_element(name)
         return elements
+
+    def get_subscription(self, short_name):
+        """Get the subscription with the provided short_name
+
+        :returns: A :class:`WVASubscription` instance bound for the specified short name
+        """
+        return WVASubscription(self._http_client, short_name)
+
+    def get_subscriptions(self):
+        """Return a list of subscriptions currently active for this WVA device
+
+        :raises WVAError: if there is a problem getting the subscription list from the WVA
+        :returns: A list of :class:`WVASubscription` instances
+        """
+        # Example: {'subscriptions': ['subscriptions/TripDistance~sub', 'subscriptions/FuelRate~sub', ]}
+        subscriptions = []
+        for uri in self.get_http_client().get("subscriptions").get('subscriptions'):
+            subscriptions.append(self.get_subscription(uri.split("/")[-1]))
+        return subscriptions
+
+    def get_event_stream(self):
+        """Get the event stream associated with this WVA
+
+        Note that this event stream is shared across all users of this WVA device
+        as the WVA only supports a single event stream.
+
+        :return: a new :class:`WVAEventStream` instance
+        """
+        if self._event_stream is None:
+            self._event_stream = WVAEventStream(self._http_client)
+        return self._event_stream
