@@ -12,9 +12,21 @@ pyversions=(2.7.7
             3.4.3
             pypy-2.3.1)
 
-# first make sure that pyenv is installed
-if [ ! -s "$HOME/.pyenv/bin/pyenv" ]; then
-    curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash
+# parse options
+for i in "$@"
+do
+    case $i in
+        --fast)
+            FAST=YES
+            ;;
+    esac
+done
+
+if [ ! FAST="YES" ]; then
+    # first make sure that pyenv is installed
+    if [ ! -s "$HOME/.pyenv/bin/pyenv" ]; then
+        curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash
+    fi
 fi
 
 # Update pyenv (required for new python versions to be available)
@@ -35,7 +47,17 @@ pyenv rehash
 pyenv global ${pyversions[*]}
 
 # Now, run the tests after sourcing venv for tox install/use
-virtualenv -q .toxenv
+if [ ! FAST="YES" ]; then
+    virtualenv -q .toxenv
+fi
 source .toxenv/bin/activate
-pip install -q -r dev-requirements.txt
-tox --recreate
+if [ ! FAST="YES" ]; then
+    pip install -q -r dev-requirements.txt
+fi
+
+if FAST="YES"; then
+    tox
+else
+    # will ensure all depencies are pulled in
+    tox --recreate
+fi
