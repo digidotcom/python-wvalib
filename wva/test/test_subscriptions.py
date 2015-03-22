@@ -47,7 +47,7 @@ class TestWVASubscriptions(WVATestBase):
         sub = self.wva.get_subscription("new-short-name")
         sub.create("vehicle/data/EngineSpeed", buffer="drop", interval=5)
         req = self._get_last_request()
-        self.assertDictEqual(json.loads(req.body), {
+        self.assertDictEqual(json.loads(req.body.decode('utf-8')), {
             'subscription': {'buffer': 'drop',
                              'interval': 5,
                              'uri': 'vehicle/data/EngineSpeed'},

@@ -5,9 +5,11 @@
 # Copyright (c) 2015 Digi International Inc. All Rights Reserved.
 import json
 import socket
+import _socket
 import unittest
 import time
 import mock
+import six
 from wva.stream import WVAEventListenerThread, EVENT_STREAM_STATE_CONNECTING, EVENT_STREAM_STATE_CONNECTED, \
     EVENT_STREAM_STATE_DISABLED
 
@@ -17,7 +19,8 @@ from wva.test.test_utilities import WVATestBase
 class TestWVAEventStream(WVATestBase):
     def setUp(self):
         WVATestBase.setUp(self)
-        self.sock_head, self.sock_tail = socket.socketpair()
+        # TODO: figure out why this hack is needed for py3 support
+        self.sock_head, self.sock_tail = _socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM, 0)
 
     def tearDown(self):
         WVATestBase.tearDown(self)
@@ -44,7 +47,7 @@ class TestWVAEventStream(WVATestBase):
         )
 
     def test_callback_exception_caught(self):
-        def raiser():
+        def raiser(evt):
             raise ValueError("Something went wrong")
 
         # Tests will fail if exception is raised
@@ -212,7 +215,7 @@ class TestWVAEventStream(WVATestBase):
                            'short_name': 'speedy',
                            'timestamp': '2015-03-22T05:14:30Z',
                            'uri': 'vehicle/data/VehicleSpeed'}}
-        self.sock_head.send(json.dumps(event) + '\r\n' + json.dumps(event2))
+        self.sock_head.send(six.b(json.dumps(event) + '\r\n' + json.dumps(event2)))
         listener_thread._step()
         cb.assert_has_calls([
             mock.call(event),

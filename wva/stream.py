@@ -10,6 +10,7 @@ import logging
 import socket
 import threading
 import time
+import six
 from wva.exceptions import WVAError
 
 
@@ -115,7 +116,7 @@ class WVAEventListenerThread(threading.Thread):
         self._event_stream = event_stream
         self._http_client = http_client
         self._socket = None
-        self._buf = ""
+        self._buf = six.u('')
         self._stop_requested = False
         self._decoder = json.JSONDecoder()
         self._state = EVENT_STREAM_STATE_CONNECTING
@@ -138,7 +139,7 @@ class WVAEventListenerThread(threading.Thread):
         try:
             open_brace_idx = self._buf.index('{')
         except ValueError:
-            self._buf = ""  # no brace found
+            self._buf = six.u('')  # no brace found
         else:
             if open_brace_idx > 0:
                 self._buf = self._buf[open_brace_idx:]
@@ -164,16 +165,16 @@ class WVAEventListenerThread(threading.Thread):
             host = self._http_client.hostname
             port = event_info["port"]
             self._socket = self._create_connected_socket(host, port)
-        except WVAError, e:
+        except WVAError as e:
             logger.debug("WVAError connecting to event stream: %s", e)
             time.sleep(DELAY_ON_ERROR)
-        except socket.error, e:
+        except socket.error as e:
             logger.debug("socket.error connecting to event stream: %s", e)
             time.sleep(DELAY_ON_ERROR)
         except:
             logger.exception("Unexpected exception")
         else:
-            self._buf = ""  # ensure buffer is emptied
+            self._buf = six.u('')  # ensure buffer is emptied
             self._state = EVENT_STREAM_STATE_CONNECTED
 
     def _service_connected(self):
@@ -182,7 +183,7 @@ class WVAEventListenerThread(threading.Thread):
             data = self._socket.recv(1024)
         except socket.timeout:
             return
-        except socket.error, e:
+        except socket.error as e:
             logger.debug("socket.error from connected state: %s", e)
             logger.info("Connected -> Connecting (socket error)")
             self._socket.close()
@@ -195,7 +196,7 @@ class WVAEventListenerThread(threading.Thread):
             self._state = EVENT_STREAM_STATE_CONNECTING
             return
         else:
-            self._buf += data
+            self._buf += data.decode('utf-8')
             while True:
                 event = self._parse_one_event()
                 if event is None:
