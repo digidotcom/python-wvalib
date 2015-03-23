@@ -19,7 +19,9 @@ from wva.test.test_utilities import WVATestBase
 class TestWVAEventStream(WVATestBase):
     def setUp(self):
         WVATestBase.setUp(self)
-        # TODO: figure out why this hack is needed for py3 support
+        self.prepare_response("GET", "/ws/config/ws_events", status=500)  # error by default
+
+        # httpretty breaks socketpair on py3, so workaround by using _socket directly
         self.sock_head, self.sock_tail = _socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM, 0)
 
     def tearDown(self):
