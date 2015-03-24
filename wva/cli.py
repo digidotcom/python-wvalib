@@ -251,7 +251,28 @@ def listen(ctx):
         time.sleep(5)
 
 
+@subscriptions.command()
+@click.argument("items", nargs=-1)
+@click.option("--seconds", default=300, help="The number of seconds of history to graph")
+@click.option("--ylim", default=1000, help="The Y Limit for the graph view area")
+@click.pass_context
+def graph(ctx, items, seconds, ylim):
+    wva = get_wva(ctx)
+    es = wva.get_event_stream()
+
+    try:
+        from wva import grapher
+    except ImportError:
+        print("Unable to graph... you must have matplotlib installed")
+    else:
+        stream_grapher = grapher.WVAStreamGrapher(wva, items, seconds=seconds, ylim=ylim)
+        es.enable()
+        stream_grapher.run()
+
+
 def main():
+    import logging
+    logging.basicConfig()
     cli(auto_envvar_prefix="WVA")
 
 
