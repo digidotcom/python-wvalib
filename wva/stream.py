@@ -31,16 +31,20 @@ class WVAEventStream(object):
         self._http_client = http_client
         self._event_listeners = set()
         self._event_listener_thread = None
+        self._lock = threading.RLock()
 
     def emit_event(self, event):
         """Emit the specified event (notify listeners)"""
-        # noinspection PyBroadException
-        try:
-            for cb in list(self._event_listeners):
+        with self._lock:
+            listeners = list(self._event_listeners)
+
+        for cb in list(self._event_listeners):
+            # noinspection PyBroadException
+            try:
                 cb(event)
-        except:
-            # Don't let exceptions from callbacks kill our thread of execution
-            logger.exception("Event callback resulted in unhandled exception")
+            except:
+                # Don't let exceptions from callbacks kill our thread of execution
+                logger.exception("Event callback resulted in unhandled exception")
 
     def enable(self):
         """Enable the stream thread
@@ -52,15 +56,17 @@ class WVAEventStream(object):
 
         The status of the thread can be monitored by calling :meth:`get_status`.
         """
-        if self._event_listener_thread is None:
-            self._event_listener_thread = WVAEventListenerThread(self, self._http_client)
-            self._event_listener_thread.start()
+        with self._lock:
+            if self._event_listener_thread is None:
+                self._event_listener_thread = WVAEventListenerThread(self, self._http_client)
+                self._event_listener_thread.start()
 
     def disable(self):
         """Disconnect from the event stream"""
-        if self._event_listener_thread is not None:
-            self._event_listener_thread.stop()
-            self._event_listener_thread = None
+        with self._lock:
+            if self._event_listener_thread is not None:
+                self._event_listener_thread.stop()
+                self._event_listener_thread = None
 
     def get_status(self):
         """Get the current status of the event stream system
@@ -75,10 +81,11 @@ class WVAEventStream(object):
             received, one should verify that vehicle data is being received
             and there is an appropriate set of subscriptions set up.
         """
-        if self._event_listener_thread is None:
-            return EVENT_STREAM_STATE_DISABLED
-        else:
-            return self._event_listener_thread.get_state()
+        with self._lock:
+            if self._event_listener_thread is None:
+                return EVENT_STREAM_STATE_DISABLED
+            else:
+                return self._event_listener_thread.get_state()
 
     def add_event_listener(self, callback):
         """Add a listener that will be called when events are received
@@ -100,11 +107,13 @@ class WVAEventStream(object):
            the event on to another thread of execution.
 
         """
-        self._event_listeners.add(callback)
+        with self._lock:
+            self._event_listeners.add(callback)
 
     def remove_event_listener(self, callback):
         """Remove the provided event listener callback"""
-        self._event_listeners.remove(callback)
+        with self._lock:
+            self._event_listeners.remove(callback)
 
 
 class WVAEventListenerThread(threading.Thread):
