@@ -1,6 +1,8 @@
 Python WVA Library
 ==================
 
+[Full Documentation](https://digidotcom.github.io/python-wvalib)
+
 This library contains a set of classes and functions for performing common
 operations using the WVA Web Services API.  It contains both general
 web services helpers (using the Python requests library) as well
@@ -27,18 +29,55 @@ application with the `--help` option.  This will show the available
 commands:
 
 ```
-# Get General Help
 $ wva --help
-<TBD>
+Usage: wva [OPTIONS] COMMAND [ARGS]...
 
-# Get help for a specific command
-$ wva <command> --help
+  Command-line interface for interacting with a WVA device
+
+Options:
+  --https / --no-https  Use HTTPS instead of HTTP
+  --hostname TEXT       Force use of the specified hostname
+  --username TEXT       Force use of the specified username
+  --password TEXT       Force use of the specified password
+  --config-dir TEXT     Directory containing wva configuration files
+  --help                Show this message and exit.
+
+Commands:
+  cliconfig      View and clear CLI config
+  delete         DELETE the specified URI Example: $ wva get...
+  get            Perform an HTTP GET of the provided URI The...
+  post           POST file data to a specific URI Note that...
+  put            PUT file data to a specific URI Example: $...
+  subscriptions  View and Edit subscriptions
+  vehicle        Vehicle Data Commands
+```
+
+You can get help for a specific command by specifying `--help` after
+the command.  For instance,
+
+```
+$ wva subscriptions --help
+Usage: wva subscriptions [OPTIONS] COMMAND [ARGS]...
+
+  View and Edit subscriptions
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  add     Add a subscription with a given short_name...
+  clear   Remove all registered subscriptions Example:...
+  delete  Delete a specific subscription by short name
+  graph   Present a live graph of the incoming...
+  list    List short name of all current subscriptions
+  listen  Output the contents of the WVA event stream...
+  show    Show metadata for a specific subscription...
 ```
 
 The first time you attempt to talk to a device, you will need
 to provide credentials for talking to the device.  The CLI
 application will then store those credentials in the file
-`~/.wva/credentials` and attempt to use those credentials in
+`~/.wva/config.json` and attempt to use those credentials in
 the future.  If the credentials are ever invalid, you will
 be prompted to enter the credentials again.
 
@@ -46,28 +85,74 @@ You can clear the credentials that are stored by deleting
 the wva configuration or by running the following command:
 
 ```
-$ wva --clear-credentials
+$ wva cliconfig clear
 ```
 
-To avoid having to enter credentials at all (and avoid the lookup
-with the stored config), you may execute commands with the following
-syntax:
+Library Usage and Examples
+--------------------------
 
+See the [Full API documentation](https://digidotcom.github.io/python-wvalib) for
+full details on the API and its usage.  Here's some examples:
+
+### Subscribe to event streams
+
+```python
+from wva import WVA
+wva = WVA("<ip>", "user", "password")
+
+# clear any existing subscriptions
+for sub in wva.get_subscriptions():
+    sub.delete()
+
+# add subscriptions for some pieces of vehicle data
+wva.get_subscription("speed").create("vehicle/data/VehicleSpeed", interval=3)
+wva.get_subscription("rpm").create("vehicle/data/EngineSpeed", interval=5)
+
+# receive vehicle data and print it
+def data_received(data):
+    print("<- {}".format(data))
+
+es = wva.get_event_stream()
+es.add_event_listner(data_received)
+es.enable()
 ```
-$ wva --user="user" --password="password" <command>
+
+### Sample vehicle data
+
+```python
+from wva import WVA
+from wva.exceptions import WVAHttpServiceUnavailableError
+
+wva = WVA("<ip>", "user", "password")
+
+# print out all available data elements and whether
+# they currently have data or not
+for name, element in wva.get_vehicle_data_elements().items():
+    try:
+        curval = element.sample()
+    except WVAHttpServiceUnavailableError:
+        print("{} (Unavailable)".format(name))
+    else:
+        print("{} = {} at {}".format(name, curval.value, curval.timestamp.ctime()))
 ```
 
-Library Usage
--------------
-
-Full API documentation for the library may be found at <TODO: doc link>.
-Basic usage of the library looks something like this:
+### Make direct web services calls
 
 ```python
 from wva import WVA
 
 wva = WVA("<ip>", "user", "password")
-# ...
+
+client = wva.get_http_client()
+
+# write a hello.py file to the python filesystem
+client.put("/files/userfs/WEB/python/hello.py".format(relpath), "print 'Hello, World!'\n")
+
+# print the contents of hello.py on the target to the screen
+print(client.get("/files/userfs/WEB/python/hello.py"))
+
+# delete hello.py
+client.delete("/files/userfs/WEB/python/hello.py")
 ```
 
 Contributing and Developer Information
