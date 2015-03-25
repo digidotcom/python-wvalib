@@ -75,13 +75,20 @@ def get_wva(ctx):
     return get_root_ctx(ctx).wva
 
 
+def cli_pprint(data):
+    # replace the unicode prefix for python 2.7
+    output = pprint.pformat(data)
+    print(output.replace("u'", "'"))
+
+
 @click.group()
+@click.option('--https/--no-https', default=True, help="Use HTTPS instead of HTTP")
 @click.option('--hostname', default=None, help='Force use of the specified hostname')
 @click.option('--username', default=None, help='Force use of the specified username')
 @click.option('--password', default=None, help='Force use of the specified password')
 @click.option("--config-dir", default="~/.wva", help='Directory containing wva configuration files')
 @click.pass_context
-def cli(ctx, hostname, username, password, config_dir):
+def cli(ctx, hostname, username, password, config_dir, https):
     ctx.user_values_entered = False
     ctx.config_dir = os.path.abspath(os.path.expanduser(config_dir))
     ctx.config = load_config(ctx)
@@ -92,23 +99,26 @@ def cli(ctx, hostname, username, password, config_dir):
         if click.confirm("Save new values to config file?"):
             save_config(ctx)
 
-    ctx.wva = WVA(ctx.hostname, ctx.username, ctx.password)
+    ctx.wva = WVA(ctx.hostname, ctx.username, ctx.password, https)
 
 
-## Low-Level HTTP Access Commands
+#
+# Low-Level HTTP Access Commands
+#
 @cli.command()
 @click.argument('path')
 @click.pass_context
 def get(ctx, path):
     http_client = get_wva(ctx).get_http_client()
-    print(http_client.get(path))
+    cli_pprint(http_client.get(path))
 
 
 @cli.command()
 @click.argument('path')
+@click.pass_context
 def delete(ctx, path):
     http_client = get_wva(ctx).get_http_client()
-    print(http_client.delete(path))
+    cli_pprint(http_client.delete(path))
 
 
 @cli.command()
@@ -117,7 +127,7 @@ def delete(ctx, path):
 @click.pass_context
 def post(ctx, path, input_file):
     http_client = get_wva(ctx).get_http_client()
-    print(http_client.post(path, input_file.read()))
+    cli_pprint(http_client.post(path, input_file.read()))
 
 
 @cli.command()
@@ -126,10 +136,12 @@ def post(ctx, path, input_file):
 @click.pass_context
 def put(ctx, path, input_file):
     http_client = get_wva(ctx).get_http_client()
-    print(http_client.put(path, input_file.read()))
+    cli_pprint(http_client.put(path, input_file.read()))
 
 
-## Vehicle Data Command Group (wva vehicle ...)
+#
+# Vehicle Data Command Group (wva vehicle ...)
+#
 @cli.group(short_help="Vehicle Data Commands")
 @click.pass_context
 def vehicle(ctx):
@@ -175,6 +187,68 @@ def sample(ctx, element, timestamp, repeat, delay):
 
         if i + 1 < repeat:  # do not delay on last iteration
             time.sleep(delay)
+
+
+#
+# Subscription/Event Commands
+#
+@cli.group()
+@click.pass_context
+def subscriptions(ctx):
+    pass
+
+
+@subscriptions.command()
+@click.pass_context
+def list(ctx):
+    wva = get_wva(ctx)
+    for subscription in wva.get_subscriptions():
+        print(subscription.short_name)
+
+
+@subscriptions.command()
+@click.argument("short_name")
+@click.pass_context
+def delete(ctx, short_name):
+    wva = get_wva(ctx)
+    subscription = wva.get_subscription(short_name)
+    subscription.delete()
+
+
+@subscriptions.command()
+@click.argument("short_name")
+@click.pass_context
+def show(ctx, short_name):
+    wva = get_wva(ctx)
+    subscription = wva.get_subscription(short_name)
+    cli_pprint(subscription.get_metadata())
+
+
+@subscriptions.command()
+@click.argument("short_name", "The short name of the subscription")
+@click.argument("uri", "The URI for which the subscription should be created")
+@click.option("--interval", default=5.0, help="How often should we receive updates for this URI")
+@click.option("--buffer", default="queue")
+@click.pass_context
+def add(ctx, short_name, uri, interval, buffer):
+    wva = get_wva(ctx)
+    subscription = wva.get_subscription(short_name)
+    subscription.create(uri, buffer, interval)
+
+
+@subscriptions.command()
+@click.pass_context
+def listen(ctx):
+    wva = get_wva(ctx)
+    es = wva.get_event_stream()
+
+    def cb(event):
+        cli_pprint(event)
+
+    es.add_event_listener(cb)
+    es.enable()
+    while True:
+        time.sleep(5)
 
 
 def main():
