@@ -42,12 +42,12 @@ class WVAStreamGrapher(object):
     def run(self):
         fig, ax = plt.subplots()
         plt.suptitle("WVA Vehicle Data (Live Graph)")
-        x = np.arange(0, self._seconds, 1)
-        plots = {}
+        x = np.arange(-200, self._seconds, 0.01)
         plot_lines = {}
         plt.xlabel("Seconds from Current Time")
         plt.ylabel("Value")
-        ax.set_xlim(right=self._seconds)
+
+        ax.set_xlim(left=-10, right=self._seconds)
         ax.set_ylim(top=self._ylim)
         for item in self.items:
             lines_created = ax.plot(x, label=item)
