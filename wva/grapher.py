@@ -44,26 +44,29 @@ class WVAStreamGrapher(object):
         plt.suptitle("WVA Vehicle Data (Live Graph)")
         x = np.arange(0, self._seconds, 1)
         plots = {}
+        plot_lines = {}
         plt.xlabel("Seconds from Current Time")
         plt.ylabel("Value")
         ax.set_xlim(right=self._seconds)
         ax.set_ylim(top=self._ylim)
         for item in self.items:
-            plots[item], = ax.plot(x, label=item)
+            lines_created = ax.plot(x, label=item)
+            print lines_created
+            plot_lines[item] = lines_created[0]  # only 1 line will ever be created
         plt.legend()
 
         def animate(_i):
             with self._lock:
                 now = arrow.utcnow().datetime
-                for item, plot in plots.items():
+                for item, plot_line in plot_lines.items():
                     history = self._history[item]
                     x = []
                     y = []
                     for dt, value in history:
                         x.append((now - dt).total_seconds())
                         y.append(value)
-                    plot.set_data(x, y)
-                return plots.values()
+                    plot_line.set_data(x, y)
+                return plot_lines.values()
 
         # blit is more performant but causes issues with resizing, etc.
         ani = animation.FuncAnimation(fig, animate, interval=250, blit=False)
