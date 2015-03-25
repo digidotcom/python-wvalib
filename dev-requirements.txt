@@ -8,4 +8,5 @@ nose
 tox
 mock
 coverage
+sphinx
 HTTPretty==0.8.8
