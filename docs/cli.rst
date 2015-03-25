@@ -108,7 +108,7 @@ command and use grep to filter out parameters that are unavailable::
 Let's say that we want to get TotalDistance and TripDistance every 10 seconds,
 EngineSpeed and Throttle every 5 seconds, and VehicleSpeed ever second.  To set
 that up, we would do the following from the command-line.  We want to buffer
-all of those items exception for speed and throttle::
+all of those items except for speed and throttle::
 
     $ wva subscriptions add distance vehicle/data/TotalDistance --interval=10
     $ wva subscriptions add trip_distance vehicle/data/TripDistance --interval=10
@@ -182,7 +182,7 @@ Low-Level Web Services Interface
 --------------------------------
 
 The library and CLI do not have custom commands for accessing all
-of the WVA functionality.  The cli does, however, provide a set
+of the WVA functionality.  The CLI does, however, provide a set
 of methods that allow users to explore the web services API
 generically.  The commands that may be used for exploring the
 web services API match the basic HTTP verbs:
@@ -198,7 +198,7 @@ the WVA web services to get information about `Diagnostic Trouble Codes
 as there is no first-class support for querying these in the rest of the
 CLI.
 
-First, we can explore to find where fuctionality is in the web services
+First, we can explore to find where functionality is in the web services
 API::
 
     $ wva get /
@@ -226,8 +226,8 @@ get that and see what we can find::
     $ wva get /vehicle/dtc/can0_active
     {'can0_active': []}
 
-It appears that there are no active DTCs on my bus right now.  If there
-codes, I would get an ecu refernce which I could then ``get`` which
+It appears that there are no active DTCs on my bus right now.  If there were
+active diagnostic codes, I would get an ecu reference which I could then ``get`` which
 would lead me to a DTC value.
 
 Use of the ``PUT``, ``POST``, and ``DELETE`` commands are similarly easy.
@@ -243,5 +243,5 @@ adding the following to your ~/.bashrc or similar::
     eval "$(_WVA_COMPLETE=source wva)"
 
 This functionality uses the bash completion functionality from the
-Python Click library.  The `Click Documenation <http://click.pocoo.org/3/bashcomplete/>`_
+Python Click library.  The `Click Documentation <http://click.pocoo.org/3/bashcomplete/>`_
 has additional details if you are running into performance issues or other problems.

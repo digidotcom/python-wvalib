@@ -5,10 +5,10 @@ You can install the library direclty from PyPI using pip::
 
     pip install wva
 
-The installation into a `virtualenv <https://virtualenv.pypa.io/en/latest/>_`
+The installation into a `virtualenv <https://virtualenv.pypa.io/en/latest/>`_
 is recommended but not required.
 
-With the appliation installed (and when working in the correct environment
+With the application installed (and when working in the correct environment
 if using virtualenv), you should have access to both the library and to
 the CLI application.  To test that you have access to the CLI program,
 you can run the following::
