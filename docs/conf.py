@@ -52,8 +52,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Python WVA Library'
-copyright = u'2015, Paul Osborne'
-author = u'Paul Osborne'
+copyright = u'2015, Digi International Inc'
+author = u'Digi International Inc'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -120,10 +120,17 @@ html_theme = 'alabaster'
 # documentation.
 html_theme_options = {
     'logo': 'wva.png',
+    'logo_name': True,
+    'logo_text_align': 'center',
     'github_user': 'digidotcom',
     'github_repo': 'python-wvalib',
     'github_button': False,  # use the "Fork me on Github" banner
     'github_banner': True,
+    'show_powered_by': False,
+    'extra_nav_links': {
+        'WVA Homepage': 'http://www.digi.com/products/wireless-vehicle-bus-adapter/wireless-vehicle-bus-adapter',
+        'Library on Github': 'https://github.com/digidotcom/python-wvalib',
+    }
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -240,8 +247,11 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'PythonWVALibrary.tex', u'Python WVA Library Documentation',
-   u'Paul Osborne', 'manual'),
+    (master_doc,
+     'PythonWVALibrary.tex',
+     u'Python WVA Library Documentation',
+     u'Digi International Inc',
+     'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
