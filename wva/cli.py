@@ -20,7 +20,7 @@ def load_config(ctx):
     try:
         with open(os.path.join(ctx.config_dir, "config.json")) as f:
             return json.load(f)
-    except (IOError, ValueError):
+    except (OSError, IOError, ValueError):
         return {}
 
 
@@ -42,10 +42,12 @@ def save_config(ctx):
 
 
 def clear_config(ctx):
-    try:
-        os.remove(os.path.join(ctx.config_dir, "config.json"))
-    except IOError:
-        print("Failed to remove config.json")
+    config_json = os.path.join(ctx.config_dir, "config.json")
+    if os.path.exists(config_json):
+        try:
+            os.remove(config_json)
+        except (IOError, OSError):
+            print("Failed to remove config.json")
 
 
 def get_config_value(ctx, key, prompt, current_value, password=False):
