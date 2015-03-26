@@ -42,11 +42,10 @@ def save_config(ctx):
 
 
 def clear_config(ctx):
-    if os.path.exists(ctx.config_dir):
-        try:
-            os.remove(os.path.join(ctx.config_dir, "config.json"))
-        except IOError:
-            print("Failed to remove config.json")
+    try:
+        os.remove(os.path.join(ctx.config_dir, "config.json"))
+    except IOError:
+        print("Failed to remove config.json")
 
 
 def get_config_value(ctx, key, prompt, current_value, password=False):
@@ -74,11 +73,9 @@ def get_password(ctx):
 
 
 def get_root_ctx(ctx):
-    while True:
-        if getattr(ctx, 'is_root', False):
-            return ctx
-        else:
-            ctx = ctx.parent
+    while not getattr(ctx, 'is_root', False):
+        ctx = ctx.parent
+    return ctx
 
 
 def get_wva(ctx):
