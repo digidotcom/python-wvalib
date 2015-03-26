@@ -67,20 +67,20 @@ class WVAHttpClient(object):
             })
         return self._session
 
-    def _get_ws_url(self, relpath):
+    def _get_ws_url(self, uri):
         base = "https" if self._use_https else "http"
-        relpath = relpath.lstrip("/")  # remove leading slash if present
+        uri = uri.lstrip("/")  # remove leading slash if present
         return "{base}://{hostname}/ws/{relpath}".format(
             base=base,
             hostname=self._hostname,
-            relpath=relpath
+            relpath=uri
         )
 
-    def raw_request(self, method, relpath, **kwargs):
+    def raw_request(self, method, uri, **kwargs):
         """Perform a WVA web services request and return the raw response object
 
         :param method: The HTTP method to use when making this request
-        :param relpath: The path past /ws to request.  That is, the path requested for
+        :param uri: The path past /ws to request.  That is, the path requested for
             a relpath of `a/b/c` would be `/ws/a/b/c`.
         :raises WVAHttpSocketError: if there was an error making the HTTP request.  That is,
             the request was unable to make it to the WVA for some reason.
@@ -89,18 +89,18 @@ class WVAHttpClient(object):
             warnings.simplefilter("ignore", urllib3.exceptions.InsecureRequestWarning)
             warnings.simplefilter("ignore", urllib3.exceptions.InsecurePlatformWarning)
             try:
-                response = self._get_session().request(method, self._get_ws_url(relpath), **kwargs)
+                response = self._get_session().request(method, self._get_ws_url(uri), **kwargs)
             except requests.RequestException as e:
                 # e.g. raise new_exc from old_exc
                 six.raise_from(WVAHttpRequestError(e), e)
             else:
                 return response
 
-    def request(self, method, relpath, **kwargs):
+    def request(self, method, uri, **kwargs):
         """Perform a WVA web services request and return the decoded value if successful
 
         :param method: The HTTP method to use when making this request
-        :param relpath: The path past /ws to request.  That is, the path requested for
+        :param uri: The path past /ws to request.  That is, the path requested for
             a relpath of `a/b/c` would be `/ws/a/b/c`.
         :raises WVAHttpError: if a response is received but the success is non-success
         :raises WVAHttpSocketError: if there was an error making the HTTP request.  That is,
@@ -110,7 +110,7 @@ class WVAHttpClient(object):
             be returned.  If not a JSON response, a unicode string of the response
             text will be returned.
         """
-        response = self.raw_request(method, relpath, **kwargs)
+        response = self.raw_request(method, uri, **kwargs)
         if response.status_code != 200:
             exception_class = HTTP_STATUS_EXCEPTION_MAP.get(response.status_code, WVAHttpError)
             raise exception_class(response)
@@ -120,29 +120,29 @@ class WVAHttpClient(object):
         else:
             return response.text
 
-    def delete(self, relpath, **kwargs):
+    def delete(self, uri, **kwargs):
         """DELETE the specified web service path
 
         See :meth:`request` for additional details.
         """
-        return self.request("DELETE", relpath, **kwargs)
+        return self.request("DELETE", uri, **kwargs)
 
-    def get(self, relpath, **kwargs):
+    def get(self, uri, **kwargs):
         """GET the specified web service path and return the decoded response contents
 
         See :meth:`request` for additional details.
         """
-        return self.request("GET", relpath, **kwargs)
+        return self.request("GET", uri, **kwargs)
 
-    def post(self, relpath, data, **kwargs):
+    def post(self, uri, data, **kwargs):
         """POST the provided data to the specified path
 
         See :meth:`request` for additional details.  The `data` parameter here is
         expected to be a string type.
         """
-        return self.request("POST", relpath, data=data, **kwargs)
+        return self.request("POST", uri, data=data, **kwargs)
 
-    def post_json(self, relpath, data, **kwargs):
+    def post_json(self, uri, data, **kwargs):
         """POST the provided data as json to the specified path
 
         See :meth:`request` for additional details.
@@ -151,17 +151,17 @@ class WVAHttpClient(object):
         kwargs.setdefault("headers", {}).update({
             "Content-Type": "application/json",  # tell server we are sending json
         })
-        return self.post(relpath, data=encoded_data, **kwargs)
+        return self.post(uri, data=encoded_data, **kwargs)
 
-    def put(self, relpath, data, **kwargs):
+    def put(self, uri, data, **kwargs):
         """PUT the provided data to the specified path
 
         See :meth:`request` for additional details.  The `data` parameter here is
         expected to be a string type.
         """
-        return self.request("PUT", relpath, data=data, **kwargs)
+        return self.request("PUT", uri, data=data, **kwargs)
 
-    def put_json(self, relpath, data, **kwargs):
+    def put_json(self, uri, data, **kwargs):
         """PUT the provided data as json to the specified path
 
         See :meth:`request` for additional details.
@@ -170,4 +170,4 @@ class WVAHttpClient(object):
         kwargs.setdefault("headers", {}).update({
             "Content-Type": "application/json",  # tell server we are sending json
         })
-        return self.put(relpath, data=encoded_data, **kwargs)
+        return self.put(uri, data=encoded_data, **kwargs)
