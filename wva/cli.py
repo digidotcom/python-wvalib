@@ -12,7 +12,7 @@ import time
 from core import WVA
 import click
 import os
-from wva.exceptions import WVAError, WVAHttpServiceUnavailableError
+from wva.exceptions import WVAError, WVAHttpServiceUnavailableError, WVAHttpNotFoundError
 
 
 def load_config(ctx):
@@ -268,6 +268,45 @@ def graph(ctx, items, seconds, ylim):
         stream_grapher = grapher.WVAStreamGrapher(wva, items, seconds=seconds, ylim=ylim)
         es.enable()
         stream_grapher.run()
+
+#
+# SSH
+#
+@cli.group()
+@click.pass_context
+def ssh(ctx):
+    """Enable SSH access to a device"""
+
+
+@ssh.command()
+@click.option("--public-key", type=click.File(),
+              default=os.path.expanduser("~/.ssh/id_rsa.pub"), help="The public key to use")
+@click.option("--append/--no-append", default=False, help="Append to the authorized_keys")
+@click.pass_context
+def authorize(ctx, public_key, append):
+    """Enable ssh login as the Python user for the current user
+
+This command will create an authorized_keys file on the target device
+containing the current users public key.  This will allow ssh to
+the WVA from this machine.
+"""
+    wva = get_wva(ctx)
+
+    http_client = wva.get_http_client()
+    authorized_keys_uri = "/files/userfs/WEB/python/.ssh/authorized_keys"
+    authorized_key_contents = public_key
+    if append:
+        try:
+            existing_contents = http_client.get(authorized_keys_uri)
+            authorized_key_contents = "{}\n{}".format(existing_contents, public_key)
+        except WVAHttpNotFoundError:
+            pass  # file doesn't exist, just write the public key
+    http_client.put(authorized_keys_uri, authorized_key_contents)
+
+    print("Public key written to authorized_keys for python user.")
+    print("You should now be able to ssh to the device by doing the following:")
+    print("")
+    print("  $ ssh python@{}".format(get_root_ctx(ctx).hostname))
 
 
 def main():
