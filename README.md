@@ -166,6 +166,17 @@ request.
 Information for developers on coding style, how to run the tests,
 etc. may be found in the [Developer's README](README-dev.md).
 
+Support
+-------
+
+This library is in "Alpha" currently and is not tested beyond the unit
+tests included in the code and basic developer testing.  Prior to a
+1.0 release, the APIs may change in backwards incompatible ways at
+each minor revision.
+
+If you run into issues, please create an issue on the project's
+[Github Page](https://github.com/digidotcom/python-wvalib).
+
 License
 -------
 
