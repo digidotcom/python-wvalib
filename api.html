@@ -1,0 +1,697 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API Documentation &mdash; Python WVA Library 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Python WVA Library 0.1 documentation" href="index.html" />
+    <link rel="prev" title="Command Line Interface" href="cli.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cli.html" title="Command Line Interface"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Python WVA Library 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="api-documentation">
+<h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="wva-core-class">
+<h2>WVA Core Class<a class="headerlink" href="#wva-core-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="wva.WVA">
+<em class="property">class </em><code class="descclassname">wva.</code><code class="descname">WVA</code><span class="sig-paren">(</span><em>hostname</em>, <em>username</em>, <em>password</em>, <em>use_https=True</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.WVA" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="wva.WVA.get_event_stream">
+<code class="descname">get_event_stream</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wva.WVA.get_event_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the event stream associated with this WVA</p>
+<p>Note that this event stream is shared across all users of this WVA device
+as the WVA only supports a single event stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a new <code class="xref py py-class docutils literal"><span class="pre">WVAEventStream</span></code> instance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.WVA.get_http_client">
+<code class="descname">get_http_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wva.WVA.get_http_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a direct reference to the http client used by this WVA instance</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.WVA.get_subscription">
+<code class="descname">get_subscription</code><span class="sig-paren">(</span><em>short_name</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.WVA.get_subscription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the subscription with the provided short_name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A <code class="xref py py-class docutils literal"><span class="pre">WVASubscription</span></code> instance bound for the specified short name</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.WVA.get_subscriptions">
+<code class="descname">get_subscriptions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wva.WVA.get_subscriptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of subscriptions currently active for this WVA device</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Raises WVAError:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">if there is a problem getting the subscription list from the WVA</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of <code class="xref py py-class docutils literal"><span class="pre">WVASubscription</span></code> instances</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.WVA.get_vehicle_data_element">
+<code class="descname">get_vehicle_data_element</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.WVA.get_vehicle_data_element" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <code class="xref py py-class docutils literal"><span class="pre">VehicleDataElement</span></code> with the given name</p>
+<p>For example, if I wanted to get information about the speed of a vehicle,
+I could do so by doing the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">speed</span> <span class="o">=</span> <span class="n">wva</span><span class="o">.</span><span class="n">get_vehicle_data_element</span><span class="p">(</span><span class="s">&quot;VehicleSpeed&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">speed</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.WVA.get_vehicle_data_elements">
+<code class="descname">get_vehicle_data_elements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wva.WVA.get_vehicle_data_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a dictionary mapping names to <code class="xref py py-class docutils literal"><span class="pre">VehicleData</span></code> instances</p>
+<p>This result is based on the results of <cite>GET /ws/vehicle/data</cite> that returns a list
+of URIs to each vehicle data element.  The value is a handle for accessing
+additional information about a particular data element.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Raises WVAError:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">In the event of a problem retrieving the list of data elements</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dictionary of element names mapped to <code class="xref py py-class docutils literal"><span class="pre">VehicleDataElement</span></code> instances.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-wva.http_client">
+<span id="http-client"></span><h2>HTTP Client<a class="headerlink" href="#module-wva.http_client" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="wva.http_client.WVAHttpClient">
+<em class="property">class </em><code class="descclassname">wva.http_client.</code><code class="descname">WVAHttpClient</code><span class="sig-paren">(</span><em>hostname</em>, <em>username</em>, <em>password</em>, <em>use_https=True</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.http_client.WVAHttpClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper around requests for making WVA Web Service Calls</p>
+<dl class="method">
+<dt id="wva.http_client.WVAHttpClient.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><em>uri</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.http_client.WVAHttpClient.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>DELETE the specified web service path</p>
+<p>See <a class="reference internal" href="#wva.http_client.WVAHttpClient.request" title="wva.http_client.WVAHttpClient.request"><code class="xref py py-meth docutils literal"><span class="pre">request()</span></code></a> for additional details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.http_client.WVAHttpClient.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>uri</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.http_client.WVAHttpClient.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>GET the specified web service path and return the decoded response contents</p>
+<p>See <a class="reference internal" href="#wva.http_client.WVAHttpClient.request" title="wva.http_client.WVAHttpClient.request"><code class="xref py py-meth docutils literal"><span class="pre">request()</span></code></a> for additional details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.http_client.WVAHttpClient.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>uri</em>, <em>data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.http_client.WVAHttpClient.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>POST the provided data to the specified path</p>
+<p>See <a class="reference internal" href="#wva.http_client.WVAHttpClient.request" title="wva.http_client.WVAHttpClient.request"><code class="xref py py-meth docutils literal"><span class="pre">request()</span></code></a> for additional details.  The <cite>data</cite> parameter here is
+expected to be a string type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.http_client.WVAHttpClient.post_json">
+<code class="descname">post_json</code><span class="sig-paren">(</span><em>uri</em>, <em>data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.http_client.WVAHttpClient.post_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>POST the provided data as json to the specified path</p>
+<p>See <a class="reference internal" href="#wva.http_client.WVAHttpClient.request" title="wva.http_client.WVAHttpClient.request"><code class="xref py py-meth docutils literal"><span class="pre">request()</span></code></a> for additional details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.http_client.WVAHttpClient.put">
+<code class="descname">put</code><span class="sig-paren">(</span><em>uri</em>, <em>data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.http_client.WVAHttpClient.put" title="Permalink to this definition">¶</a></dt>
+<dd><p>PUT the provided data to the specified path</p>
+<p>See <a class="reference internal" href="#wva.http_client.WVAHttpClient.request" title="wva.http_client.WVAHttpClient.request"><code class="xref py py-meth docutils literal"><span class="pre">request()</span></code></a> for additional details.  The <cite>data</cite> parameter here is
+expected to be a string type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.http_client.WVAHttpClient.put_json">
+<code class="descname">put_json</code><span class="sig-paren">(</span><em>uri</em>, <em>data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.http_client.WVAHttpClient.put_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>PUT the provided data as json to the specified path</p>
+<p>See <a class="reference internal" href="#wva.http_client.WVAHttpClient.request" title="wva.http_client.WVAHttpClient.request"><code class="xref py py-meth docutils literal"><span class="pre">request()</span></code></a> for additional details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.http_client.WVAHttpClient.raw_request">
+<code class="descname">raw_request</code><span class="sig-paren">(</span><em>method</em>, <em>uri</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.http_client.WVAHttpClient.raw_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a WVA web services request and return the raw response object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>method</strong> &#8211; The HTTP method to use when making this request</li>
+<li><strong>uri</strong> &#8211; The path past /ws to request.  That is, the path requested for
+a relpath of <cite>a/b/c</cite> would be <cite>/ws/a/b/c</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises WVAHttpSocketError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">if there was an error making the HTTP request.  That is,
+the request was unable to make it to the WVA for some reason.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.http_client.WVAHttpClient.request">
+<code class="descname">request</code><span class="sig-paren">(</span><em>method</em>, <em>uri</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.http_client.WVAHttpClient.request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a WVA web services request and return the decoded value if successful</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>method</strong> &#8211; The HTTP method to use when making this request</li>
+<li><strong>uri</strong> &#8211; The path past /ws to request.  That is, the path requested for
+a relpath of <cite>a/b/c</cite> would be <cite>/ws/a/b/c</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first simple">
+<li><strong>WVAHttpError</strong> &#8211; if a response is received but the success is non-success</li>
+<li><strong>WVAHttpSocketError</strong> &#8211; if there was an error making the HTTP request.  That is,
+the request was unable to make it to the WVA for some reason.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the response content type is JSON, it will be deserialized and a
+python dictionary containing the information from the json document will
+be returned.  If not a JSON response, a unicode string of the response
+text will be returned.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-wva.vehicle">
+<span id="vehicle-data"></span><h2>Vehicle Data<a class="headerlink" href="#module-wva.vehicle" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="wva.vehicle.VehicleDataElement">
+<em class="property">class </em><code class="descclassname">wva.vehicle.</code><code class="descname">VehicleDataElement</code><span class="sig-paren">(</span><em>http_client</em>, <em>element_name</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.vehicle.VehicleDataElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides access to a particular vehicle data element</p>
+<dl class="method">
+<dt id="wva.vehicle.VehicleDataElement.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wva.vehicle.VehicleDataElement.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current value of this vehicle data element</p>
+<p>The returned value will be a namedtuple with &#8216;value&#8217; and
+&#8216;timestamp&#8217; elements.  Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">speed_el</span> <span class="o">=</span> <span class="n">wva</span><span class="o">.</span><span class="n">get_vehicle_data_element</span><span class="p">(</span><span class="s">&#39;VehicleSpeed&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">speed</span> <span class="o">=</span> <span class="n">speed_el</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Speed: </span><span class="si">%0.2f</span><span class="s"> @ </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">speed</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">speed</span><span class="o">.</span><span class="n">timestamp</span><span class="p">))</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="wva.vehicle.VehicleDataSample">
+<em class="property">class </em><code class="descclassname">wva.vehicle.</code><code class="descname">VehicleDataSample</code><span class="sig-paren">(</span><em>value</em>, <em>timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.vehicle.VehicleDataSample" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="wva.vehicle.VehicleDataSample.timestamp">
+<code class="descname">timestamp</code><a class="headerlink" href="#wva.vehicle.VehicleDataSample.timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="wva.vehicle.VehicleDataSample.value">
+<code class="descname">value</code><a class="headerlink" href="#wva.vehicle.VehicleDataSample.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-wva.subscriptions">
+<span id="subscriptions"></span><h2>Subscriptions<a class="headerlink" href="#module-wva.subscriptions" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="wva.subscriptions.WVASubscription">
+<em class="property">class </em><code class="descclassname">wva.subscriptions.</code><code class="descname">WVASubscription</code><span class="sig-paren">(</span><em>http_client</em>, <em>short_name</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.subscriptions.WVASubscription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide access to a subscription on the WVA</p>
+<dl class="method">
+<dt id="wva.subscriptions.WVASubscription.create">
+<code class="descname">create</code><span class="sig-paren">(</span><em>uri</em>, <em>buffer='queue'</em>, <em>interval=10</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.subscriptions.WVASubscription.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a subscription with this short name and the provided parameters</p>
+<p>For more information on what the parameters required here mean, please
+refer to the <a class="reference external" href="http://goo.gl/DRcOQf">WVA Documentation</a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Raises WVAError:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">If there is a problem creating the new subscription</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.subscriptions.WVASubscription.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wva.subscriptions.WVASubscription.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete this subscription</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Raises WVAError:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">If there is a problem deleting the subscription</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.subscriptions.WVASubscription.get_metadata">
+<code class="descname">get_metadata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wva.subscriptions.WVASubscription.get_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the metadata that is available for this subscription</p>
+<p>The metadata for a subscription is a dictionary like the following.  Details
+on the elements may be found in the <a class="reference external" href="http://goo.gl/DRcOQf">WVA documentation</a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s">&#39;buffer&#39;</span><span class="p">:</span> <span class="s">&#39;queue&#39;</span><span class="p">,</span>
+    <span class="s">&#39;interval&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s">&#39;uri&#39;</span><span class="p">:</span> <span class="s">&#39;vehicle/data/TripDistance&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Raises WVAError:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">if there is a problem querying the WVA for the metadata</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dictionary containing the metadata for this subscription</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-wva.stream">
+<span id="wvastream"></span><h2>WVAStream<a class="headerlink" href="#module-wva.stream" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="wva.stream.WVAEventListenerThread">
+<em class="property">class </em><code class="descclassname">wva.stream.</code><code class="descname">WVAEventListenerThread</code><span class="sig-paren">(</span><em>event_stream</em>, <em>http_client</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.stream.WVAEventListenerThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Thread responsible for communicating with WVA in order to receive a stream of events</p>
+<dl class="method">
+<dt id="wva.stream.WVAEventListenerThread.get_state">
+<code class="descname">get_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wva.stream.WVAEventListenerThread.get_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current state</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.stream.WVAEventListenerThread.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wva.stream.WVAEventListenerThread.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request that the event stream thread be stopped and wait for it to stop</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="wva.stream.WVAEventStream">
+<em class="property">class </em><code class="descclassname">wva.stream.</code><code class="descname">WVAEventStream</code><span class="sig-paren">(</span><em>http_client</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.stream.WVAEventStream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide methods for working with the event stream from a WVA Device</p>
+<dl class="method">
+<dt id="wva.stream.WVAEventStream.add_event_listener">
+<code class="descname">add_event_listener</code><span class="sig-paren">(</span><em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.stream.WVAEventStream.add_event_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a listener that will be called when events are received</p>
+<p>This callback will be called when any event is received.  The callback
+will be called as follows and should have an appropriate shape:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">callback</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Where event is a dictionary containg the event data as described in
+the <a class="reference external" href="http://goo.gl/6vU5i1">WVA Documentation on Events</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The event stream operates in its own thread of execution and event callbacks
+will occur on the event stream thread.  In order to avoid delay of delivery
+of other events, one should avoid blocking in the callback.  If there is
+a large amount of work to do, it may make sense to use a Queue to pass
+the event on to another thread of execution.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.stream.WVAEventStream.disable">
+<code class="descname">disable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wva.stream.WVAEventStream.disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnect from the event stream</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.stream.WVAEventStream.emit_event">
+<code class="descname">emit_event</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.stream.WVAEventStream.emit_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Emit the specified event (notify listeners)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.stream.WVAEventStream.enable">
+<code class="descname">enable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wva.stream.WVAEventStream.enable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the stream thread</p>
+<p>This operation will ensure that the thread that is responsible
+for connecting to the WVA and triggering event callbacks is started.
+This thread will continue to run and do what it needs to do to
+maintain a connection to the WVA.</p>
+<p>The status of the thread can be monitored by calling <a class="reference internal" href="#wva.stream.WVAEventStream.get_status" title="wva.stream.WVAEventStream.get_status"><code class="xref py py-meth docutils literal"><span class="pre">get_status()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.stream.WVAEventStream.get_status">
+<code class="descname">get_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wva.stream.WVAEventStream.get_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current status of the event stream system</p>
+<p>The status will be one of the following:</p>
+<ul>
+<li><p class="first">EVENT_STREAM_STATE_STOPPED: if the stream thread has not been enabled</p>
+</li>
+<li><dl class="first docutils">
+<dt>EVENT_STREAM_STATE_CONNECTING: the stream thread is running and</dt>
+<dd><p class="first last">attempting to establish a connection to the WVA to receive events.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>EVENT_STREAM_STATE_CONNECTED: We are connected to the WVA and</dt>
+<dd><p class="first last">receiving or ready to receive events.  If no events are being
+received, one should verify that vehicle data is being received
+and there is an appropriate set of subscriptions set up.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="wva.stream.WVAEventStream.remove_event_listener">
+<code class="descname">remove_event_listener</code><span class="sig-paren">(</span><em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.stream.WVAEventStream.remove_event_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the provided event listener callback</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-wva.exceptions">
+<span id="exeptions"></span><h2>Exeptions<a class="headerlink" href="#module-wva.exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="wva.exceptions.WVAError">
+<em class="property">exception </em><code class="descclassname">wva.exceptions.</code><code class="descname">WVAError</code><a class="headerlink" href="#wva.exceptions.WVAError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for all WVA API Errors that may occur</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="wva.exceptions.WVAHttpBadRequestError">
+<em class="property">exception </em><code class="descclassname">wva.exceptions.</code><code class="descname">WVAHttpBadRequestError</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.exceptions.WVAHttpBadRequestError" title="Permalink to this definition">¶</a></dt>
+<dd><p>A request was made but we received an HTTP status 400 &#8220;Bad Request&#8221;</p>
+<p>This failure case is returned under the following conditions:</p>
+<ul class="simple">
+<li>The URI cannot be parsed; particularly if the URI is too long for the
+internal buffering of the web services engine.</li>
+<li>The web services are unable to parse a document successfully based on the content type.</li>
+<li>Failure attempting to set the time.</li>
+<li>Failure parsing the fields of a record in a PUT operation (for example, the URI specified
+for an alarm not referencing something that supports alarms).</li>
+</ul>
+</dd></dl>
+
+<dl class="exception">
+<dt id="wva.exceptions.WVAHttpError">
+<em class="property">exception </em><code class="descclassname">wva.exceptions.</code><code class="descname">WVAHttpError</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.exceptions.WVAHttpError" title="Permalink to this definition">¶</a></dt>
+<dd><p>An error that occurs when making an HTTP Web Services API Call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="exception">
+<dt id="wva.exceptions.WVAHttpForbiddenError">
+<em class="property">exception </em><code class="descclassname">wva.exceptions.</code><code class="descname">WVAHttpForbiddenError</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.exceptions.WVAHttpForbiddenError" title="Permalink to this definition">¶</a></dt>
+<dd><p>A request was made but we received an HTTP status 403 &#8220;Forbidden&#8221;</p>
+<p>This failure case is returned under the following conditions:</p>
+<ul class="simple">
+<li>The specified URI in the request URL is not one that can managed by the
+web services user due to permissions embedded within the system.</li>
+</ul>
+<p>This failure is most common when trying to manipulate files in the filesystem.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="wva.exceptions.WVAHttpInternalServerError">
+<em class="property">exception </em><code class="descclassname">wva.exceptions.</code><code class="descname">WVAHttpInternalServerError</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.exceptions.WVAHttpInternalServerError" title="Permalink to this definition">¶</a></dt>
+<dd><p>A request was made but we received an HTTP status 500 &#8220;Internal Server Error&#8221;</p>
+<p>This failure case is returned when there are unexpected errors unrelated to the requests
+or responses themselves. Possible conditions resulting in this code include:</p>
+<ul class="simple">
+<li>An unexpected failure registering an alarm.</li>
+<li>An unexpected failure querying the vehicle bus subsystem.</li>
+<li>An inability to read or write the internal resources associated with LEDs.</li>
+</ul>
+</dd></dl>
+
+<dl class="exception">
+<dt id="wva.exceptions.WVAHttpMethodNotAllowedError">
+<em class="property">exception </em><code class="descclassname">wva.exceptions.</code><code class="descname">WVAHttpMethodNotAllowedError</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.exceptions.WVAHttpMethodNotAllowedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>A request was made but we received an HTTP status 405 &#8220;Not Allowed&#8221;</p>
+<p>This failure case is returned when the requested URI is recognized, but the HTTP method
+(for example, GET or PUT) in use is not supported in conjunction with that URI. Using
+the Index of Web Services Resources, you can quickly determine which methods are compatible
+with which URIs.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="wva.exceptions.WVAHttpNotAcceptableError">
+<em class="property">exception </em><code class="descclassname">wva.exceptions.</code><code class="descname">WVAHttpNotAcceptableError</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.exceptions.WVAHttpNotAcceptableError" title="Permalink to this definition">¶</a></dt>
+<dd><p>A request was made but we received an HTTP status 406 &#8220;Unacceptable&#8221;</p>
+<p>This failure case is returned when an HTTP method (for example, GET) requests a response,
+but the server is not able to deliver a document with that content type for the specified URI.
+This failure could happen if a request arrived with an &#8220;Accept: text/html&#8221; header, and the URI
+was XML or JSON only.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="wva.exceptions.WVAHttpNotFoundError">
+<em class="property">exception </em><code class="descclassname">wva.exceptions.</code><code class="descname">WVAHttpNotFoundError</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.exceptions.WVAHttpNotFoundError" title="Permalink to this definition">¶</a></dt>
+<dd><p>A request was made but  we received an HTTP status 404 &#8220;Not Found&#8221;</p>
+<p>This failure case is returned under the following conditions:</p>
+<ul class="simple">
+<li>The specified URI in the request URL is not one recognized by the web services system.</li>
+</ul>
+<p>For alarms and subscriptions, a PUT can be made to a previously unknown URI to create an
+alarm or subscription, but a GET or DELETE of an as-yet unknown URI will generate this error
+condition.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="wva.exceptions.WVAHttpRequestError">
+<em class="property">exception </em><code class="descclassname">wva.exceptions.</code><code class="descname">WVAHttpRequestError</code><span class="sig-paren">(</span><em>e</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.exceptions.WVAHttpRequestError" title="Permalink to this definition">¶</a></dt>
+<dd><p>We tried to make a web services call but could not even connect</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="exception">
+<dt id="wva.exceptions.WVAHttpRequestTooLongError">
+<em class="property">exception </em><code class="descclassname">wva.exceptions.</code><code class="descname">WVAHttpRequestTooLongError</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.exceptions.WVAHttpRequestTooLongError" title="Permalink to this definition">¶</a></dt>
+<dd><p>A request was made but we received an HTTP status 414 &#8220;Request-URI Too Long&#8221;</p>
+<p>This failure case is returned when the requested URI is longer than the web services
+system is able to parse.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="wva.exceptions.WVAHttpServiceUnavailableError">
+<em class="property">exception </em><code class="descclassname">wva.exceptions.</code><code class="descname">WVAHttpServiceUnavailableError</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.exceptions.WVAHttpServiceUnavailableError" title="Permalink to this definition">¶</a></dt>
+<dd><p>A request was made but we received an HTTP status 503 &#8220;Service Unavailable&#8221;</p>
+<p>This failure case is returned when a data query could not be fully processed due to
+transient state in the web server. Possible conditions resulting in this code include:</p>
+<ul class="simple">
+<li>A temporary lack of memory to allocate for parsing requests or generating
+responses can generate this response.</li>
+<li>A vehicle bus data request is made to a URI known to potentially be available
+on the bus, but the specified data has not yet been received by the Digi device.</li>
+</ul>
+</dd></dl>
+
+<dl class="exception">
+<dt id="wva.exceptions.WVAHttpUnauthorizedError">
+<em class="property">exception </em><code class="descclassname">wva.exceptions.</code><code class="descname">WVAHttpUnauthorizedError</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.exceptions.WVAHttpUnauthorizedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>A request was made but we received an HTTP status 401 &#8220;Unauthorized&#8221;</p>
+<p>The request requires authentication. The client should repeat the request with HTTP
+basic authentication using the admin login and password.  If the request already
+included authentication, the login and password are incorrect.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="wva.exceptions.WVAHttpUnsupportedMediaTypeError">
+<em class="property">exception </em><code class="descclassname">wva.exceptions.</code><code class="descname">WVAHttpUnsupportedMediaTypeError</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#wva.exceptions.WVAHttpUnsupportedMediaTypeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>A request was made but we received an HTTP status 415 &#8220;Unsupported Media Type&#8221;</p>
+<p>This failure case is returned when an HTTP method (for example, PUT) supplies a document
+with a content type that is unexpected for the specified URI. This failure could happen
+if a document arrived with a &#8220;Content-type: text/html&#8221; header, and the URI was XML or JSON only.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/wva.png" alt="Logo"/>
+    
+    <h1 class="logo logo-name">Python WVA Library</h2>
+    
+  </a>
+</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#wva-core-class">WVA Core Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-wva.http_client">HTTP Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-wva.vehicle">Vehicle Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-wva.subscriptions">Subscriptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-wva.stream">WVAStream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-wva.exceptions">Exeptions</a></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://www.digi.com/products/wireless-vehicle-bus-adapter/wireless-vehicle-bus-adapter">WVA Homepage</a></li>
+    
+    <li class="toctree-l1"><a href="https://github.com/digidotcom/python-wvalib">Library on Github</a></li>
+    
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Digi International Inc.
+      
+      |
+      <a href="_sources/api.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+
+    
+    <a href="https://github.com/digidotcom/python-wvalib" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

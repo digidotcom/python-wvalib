@@ -1,0 +1,376 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Command Line Interface &mdash; Python WVA Library 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Python WVA Library 0.1 documentation" href="index.html" />
+    <link rel="next" title="API Documentation" href="api.html" />
+    <link rel="prev" title="Quickstart" href="quickstart.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="API Documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quickstart.html" title="Quickstart"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Python WVA Library 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="command-line-interface">
+<h1>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Permalink to this headline">¶</a></h1>
+<p>The WVA command-line interface seeks to be largely self-documenting.
+To see the available top-level commands, run:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva --help
+wva --help
+Usage: wva [OPTIONS] COMMAND [ARGS]...
+
+  Command-line interface for interacting with a WVA device
+
+Options:
+  --https / --no-https  Use HTTPS instead of HTTP
+  --hostname TEXT       Force use of the specified hostname
+  --username TEXT       Force use of the specified username
+  --password TEXT       Force use of the specified password
+  --config-dir TEXT     Directory containing wva configuration files
+  --help                Show this message and exit.
+
+Commands:
+  cliconfig      View and clear CLI config
+  delete         DELETE the specified URI Example: $ wva get...
+  get            Perform an HTTP GET of the provided URI The...
+  post           POST file data to a specific URI Note that...
+  put            PUT file data to a specific URI Example: $...
+  subscriptions  View and Edit subscriptions
+  vehicle        Vehicle Data Commands
+</pre></div>
+</div>
+<p>To receive more information about a specific command, you can add
+<code class="docutils literal"><span class="pre">--help</span></code> to the end to see its documentation.  For instance:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva subscriptions --help
+Usage: wva subscriptions [OPTIONS] COMMAND [ARGS]...
+
+  View and Edit subscriptions
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  add     Add a subscription with a given short_name...
+  clear   Remove all registered subscriptions Example:...
+  delete  Delete a specific subscription by short name
+  graph   Present a live graph of the incoming...
+  list    List short name of all current subscriptions
+  listen  Output the contents of the WVA event stream...
+  show    Show metadata for a specific subscription...
+</pre></div>
+</div>
+<div class="section" id="managing-subscriptions">
+<h2>Managing Subscriptions<a class="headerlink" href="#managing-subscriptions" title="Permalink to this headline">¶</a></h2>
+<p>Most users of the WVA will at some point want to set up subscriptions
+to receive information about what vehicle is on the J1939/J1708 bus
+attached to the device.</p>
+<p>There are two steps required in order to get this information:</p>
+<ol class="arabic simple">
+<li>Create subscriptions for the parameters of interest</li>
+<li>Receive these events via the event channel</li>
+</ol>
+<p>The WVA library and CLI provide methods that make these tasks simple.</p>
+<p>To start out, we may want to see what subscriptions are currently already
+configured (perhaps by the Android app or previous work):</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva subscriptions list
+rpm
+speed
+</pre></div>
+</div>
+<p>To see more information about a subscription, we can do:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva subscriptions show speed
+{&#39;buffer&#39;: &#39;queue&#39;, &#39;interval&#39;: 5, &#39;uri&#39;: &#39;vehicle/data/VehicleSpeed&#39;}
+</pre></div>
+</div>
+<p>Let&#8217;s say we want a clean slate to work from.  In that case, we can remove
+all subscriptions by doing:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva subscriptions clear
+Deleting rpm... Done
+Deleting speed... Done
+</pre></div>
+</div>
+<p>To view available data items on the vehcle bus, we can use the <code class="docutils literal"><span class="pre">vehicle</span></code>
+command and use grep to filter out parameters that are unavailable:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva vehicle list --value | grep -v Unavailable
+AccelPedalLowIdle = 3
+AccelPedalPosition = 38.799999
+BatteryPotential = 14.25
+CruiseControlSetSpeed = 255.0
+CruiseControlStatus = 7
+EngineCoolantTemp = -5.0
+EngineManifoldPressure = 64.0
+EngineOilPressure = 128.0
+EnginePercentLoadAtCurrentSpeed = 16.0
+EngineSpeed = 1044.125
+FuelEconomy = 6.216399
+FuelLevel = 18.0
+FuelRate = 34.049999
+PTOStatus = 31
+ParkingBrake = 0
+Throttle = 102.0
+TotalDistance = 150.0
+TotalEngineHours = 37.5
+TripDistance = 75.0
+VehicleSpeed = 25.09605
+</pre></div>
+</div>
+<p>Let&#8217;s say that we want to get TotalDistance and TripDistance every 10 seconds,
+EngineSpeed and Throttle every 5 seconds, and VehicleSpeed ever second.  To set
+that up, we would do the following from the command-line.  We want to buffer
+all of those items except for speed and throttle:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva subscriptions add distance vehicle/data/TotalDistance --interval=10
+$ wva subscriptions add trip_distance vehicle/data/TripDistance --interval=10
+$ wva subscriptions add rpm vehicle/data/EngineSpeed --interval=5
+$ wva subscriptions add throttle vehicle/data/Throttle --interval=5 --buffer=discard
+$ wva subscriptions add speed vehicle/data/VehicleSpeed --interval=1 --buffer=discard
+</pre></div>
+</div>
+<p>Now, to view the data we can do the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva subscriptions listen
+{&#39;data&#39;: {&#39;EngineSpeed&#39;: {&#39;timestamp&#39;: &#39;2015-03-25T04:22:24Z&#39;,
+                            &#39;value&#39;: 7148.25},
+           &#39;sequence&#39;: 17,
+           &#39;short_name&#39;: &#39;rpm&#39;,
+           &#39;timestamp&#39;: &#39;2015-03-25T04:22:24Z&#39;,
+           &#39;uri&#39;: &#39;vehicle/data/EngineSpeed&#39;}}
+{&#39;data&#39;: {&#39;TotalDistance&#39;: {&#39;timestamp&#39;: &#39;2015-03-25T04:22:17Z&#39;,
+                              &#39;value&#39;: 850599.125},
+           &#39;sequence&#39;: 10,
+           &#39;short_name&#39;: &#39;distance&#39;,
+           &#39;timestamp&#39;: &#39;2015-03-25T04:22:24Z&#39;,
+           &#39;uri&#39;: &#39;vehicle/data/TotalDistance&#39;}}
+{&#39;data&#39;: {&#39;VehicleSpeed&#39;: {&#39;timestamp&#39;: &#39;2015-03-25T04:22:25Z&#39;,
+                             &#39;value&#39;: 220.860855},
+           &#39;sequence&#39;: 67,
+           &#39;short_name&#39;: &#39;speed&#39;,
+           &#39;timestamp&#39;: &#39;2015-03-25T04:22:25Z&#39;,
+           &#39;uri&#39;: &#39;vehicle/data/VehicleSpeed&#39;}}
+{&#39;data&#39;: {&#39;VehicleSpeed&#39;: {&#39;timestamp&#39;: &#39;2015-03-25T04:22:26Z&#39;,
+                             &#39;value&#39;: 218.349304},
+           &#39;sequence&#39;: 68,
+           &#39;short_name&#39;: &#39;speed&#39;,
+           &#39;timestamp&#39;: &#39;2015-03-25T04:22:26Z&#39;,
+           &#39;uri&#39;: &#39;vehicle/data/VehicleSpeed&#39;}}
+{&#39;data&#39;: {&#39;Throttle&#39;: {&#39;timestamp&#39;: &#39;2015-03-25T04:22:26Z&#39;,
+                         &#39;value&#39;: 102.0},
+           &#39;sequence&#39;: 15,
+           &#39;short_name&#39;: &#39;throttle&#39;,
+           &#39;timestamp&#39;: &#39;2015-03-25T04:22:26Z&#39;,
+           &#39;uri&#39;: &#39;vehicle/data/Throttle&#39;}}
+</pre></div>
+</div>
+<p>This is just a short snippet.  The listen command will run indefinitely.  You
+can kill the command with Ctrl-C at any time to stop it.</p>
+</div>
+<div class="section" id="wva-configuration-management">
+<h2>WVA Configuration Management<a class="headerlink" href="#wva-configuration-management" title="Permalink to this headline">¶</a></h2>
+<p>The WVA CLI will offer to store information about the WVA IP address/host, username,
+and password as these can be annoying to type in each time the &#8216;wva&#8217; command is
+executed.</p>
+<p>By default, settings that are saved are written to ~/.wva/config.json.</p>
+<p>You can view the current config by doing:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva cliconfig show
+{&#39;hostname&#39;: &#39;10.35.1.165&#39;,
+ &#39;password&#39;: &#39;admin&#39;,
+ &#39;username&#39;: &#39;admin&#39;,
+ &#39;version&#39;: 1}
+</pre></div>
+</div>
+<p>To clear the stored configuration, you can do:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva cliconfig clear
+</pre></div>
+</div>
+<p>See the CLI help for options on overriding the username, password, config directory
+and other settings.</p>
+</div>
+<div class="section" id="low-level-web-services-interface">
+<h2>Low-Level Web Services Interface<a class="headerlink" href="#low-level-web-services-interface" title="Permalink to this headline">¶</a></h2>
+<p>The library and CLI do not have custom commands for accessing all
+of the WVA functionality.  The CLI does, however, provide a set
+of methods that allow users to explore the web services API
+generically.  The commands that may be used for exploring the
+web services API match the basic HTTP verbs:</p>
+<blockquote>
+<div><ul class="simple">
+<li>get</li>
+<li>put</li>
+<li>post</li>
+<li>delete</li>
+</ul>
+</div></blockquote>
+<p>As an example, see how these methods can be used to navigate through
+the WVA web services to get information about <a class="reference external" href="http://ftp1.digi.com/support/documentation/html/90001930/90001930_D/Files/webservices.html#dtc">Diagnostic Trouble Codes</a>
+as there is no first-class support for querying these in the rest of the
+CLI.</p>
+<p>First, we can explore to find where functionality is in the web services
+API:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva get /
+{&#39;ws&#39;: [&#39;vehicle&#39;,
+     &#39;hw&#39;,
+     &#39;config&#39;,
+     &#39;state&#39;,
+     &#39;files&#39;,
+     &#39;alarms&#39;,
+     &#39;subscriptions&#39;,
+     &#39;password&#39;]}
+$ wva get /vehicle
+{&#39;vehicle&#39;: [&#39;vehicle/ecus&#39;, &#39;vehicle/data&#39;, &#39;vehicle/dtc&#39;]}
+</pre></div>
+</div>
+<p>Here we see that there is a URI that seems like it may be related, <code class="docutils literal"><span class="pre">/vehicle/dtc</span></code>.  Let&#8217;s
+get that and see what we can find:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva get /vehicle/dtc
+{&#39;dtc&#39;: [&#39;vehicle/dtc/can0_active&#39;,
+      &#39;vehicle/dtc/can0_inactive&#39;,
+      &#39;vehicle/dtc/can1_active&#39;,
+      &#39;vehicle/dtc/can1_inactive&#39;]}
+$ wva get /vehicle/dtc/can0_inactive
+{&#39;can0_inactive&#39;: []}
+$ wva get /vehicle/dtc/can0_active
+{&#39;can0_active&#39;: []}
+</pre></div>
+</div>
+<p>It appears that there are no active DTCs on my bus right now.  If there were
+active diagnostic codes, I would get an ecu reference which I could then <code class="docutils literal"><span class="pre">get</span></code> which
+would lead me to a DTC value.</p>
+<p>Use of the <code class="docutils literal"><span class="pre">PUT</span></code>, <code class="docutils literal"><span class="pre">POST</span></code>, and <code class="docutils literal"><span class="pre">DELETE</span></code> commands are similarly easy.
+Currently, the <code class="docutils literal"><span class="pre">PUT</span></code> and <code class="docutils literal"><span class="pre">POST</span></code> commands require a path to a file
+to be specified for the request body.</p>
+</div>
+<div class="section" id="bash-completion">
+<h2>Bash Completion<a class="headerlink" href="#bash-completion" title="Permalink to this headline">¶</a></h2>
+<p>Bash completion for the wva command-line utility may be enabled by
+adding the following to your ~/.bashrc or similar:</p>
+<div class="highlight-python"><div class="highlight"><pre>eval &quot;$(_WVA_COMPLETE=source wva)&quot;
+</pre></div>
+</div>
+<p>This functionality uses the bash completion functionality from the
+Python Click library.  The <a class="reference external" href="http://click.pocoo.org/3/bashcomplete/">Click Documentation</a>
+has additional details if you are running into performance issues or other problems.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/wva.png" alt="Logo"/>
+    
+    <h1 class="logo logo-name">Python WVA Library</h2>
+    
+  </a>
+</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Command Line Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#managing-subscriptions">Managing Subscriptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wva-configuration-management">WVA Configuration Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#low-level-web-services-interface">Low-Level Web Services Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bash-completion">Bash Completion</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://www.digi.com/products/wireless-vehicle-bus-adapter/wireless-vehicle-bus-adapter">WVA Homepage</a></li>
+    
+    <li class="toctree-l1"><a href="https://github.com/digidotcom/python-wvalib">Library on Github</a></li>
+    
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Digi International Inc.
+      
+      |
+      <a href="_sources/cli.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+
+    
+    <a href="https://github.com/digidotcom/python-wvalib" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

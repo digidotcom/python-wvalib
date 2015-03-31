@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Quickstart &mdash; Python WVA Library 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Python WVA Library 0.1 documentation" href="index.html" />
+    <link rel="next" title="Command Line Interface" href="cli.html" />
+    <link rel="prev" title="Python WVA Library Documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cli.html" title="Command Line Interface"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Python WVA Library Documentation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Python WVA Library 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<p>You can install the library direclty from PyPI using pip:</p>
+<div class="highlight-python"><div class="highlight"><pre>pip install wva
+</pre></div>
+</div>
+<p>The installation into a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtualenv</a>
+is recommended but not required.</p>
+<p>With the application installed (and when working in the correct environment
+if using virtualenv), you should have access to both the library and to
+the CLI application.  To test that you have access to the CLI program,
+you can run the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">wva</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<p>To verify that the python library is accessible you can do the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ python
+&gt;&gt;&gt; import wva
+&gt;&gt;&gt; print wva.__version__
+0.1
+</pre></div>
+</div>
+<div class="section" id="using-the-cli">
+<h2>Using the CLI<a class="headerlink" href="#using-the-cli" title="Permalink to this headline">¶</a></h2>
+<p>A detailed tutorial describing how to use the CLI can be found on the
+<a class="reference internal" href="cli.html"><em>Command Line Interface</em></a> page.  Most of the CLI is self-documenting.  To explore the
+capabilities of the CLI, you can start by running:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva --help
+Usage: wva [OPTIONS] COMMAND [ARGS]...
+
+  Command-line interface for interacting with a WVA device
+
+Options:
+  --https / --no-https  Use HTTPS instead of HTTP
+  --hostname TEXT       Force use of the specified hostname
+  --username TEXT       Force use of the specified username
+  --password TEXT       Force use of the specified password
+  --config-dir TEXT     Directory containing wva configuration files
+  --help                Show this message and exit.
+
+Commands:
+  cliconfig      View and clear CLI config
+  delete         DELETE the specified URI Example: $ wva get...
+  get            Perform an HTTP GET of the provided URI The...
+  post           POST file data to a specific URI Note that...
+  put            PUT file data to a specific URI Example: $...
+  subscriptions  View and Edit subscriptions
+  vehicle        Vehicle Data Commands
+</pre></div>
+</div>
+<p>To receive even more help on any given command, you can specify that
+command, followed by <code class="docutils literal"><span class="pre">--help</span></code> to get more details.  For instance:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wva subscriptions --help
+Usage: wva subscriptions [OPTIONS] COMMAND [ARGS]...
+
+  View and Edit subscriptions
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  add     Add a subscription with a given short_name...
+  clear   Remove all registered subscriptions Example:...
+  delete  Delete a specific subscription by short name
+  graph   Present a live graph of the incoming...
+  list    List short name of all current subscriptions
+  listen  Output the contents of the WVA event stream...
+  show    Show metadata for a specific subscription...
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-the-library">
+<h2>Using the Library<a class="headerlink" href="#using-the-library" title="Permalink to this headline">¶</a></h2>
+<p>The WVA object is the center of any use of the library.  Creating
+a WVA object can be done by doing the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">wva</span> <span class="kn">import</span> <span class="n">WVA</span>
+<span class="n">wva</span> <span class="o">=</span> <span class="n">WVA</span><span class="p">(</span><span class="s">&#39;&lt;wva-host-or-ip&gt;&#39;</span><span class="p">,</span> <span class="s">&#39;user&#39;</span><span class="p">,</span> <span class="s">&#39;password&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>By default, the WVA object will be set-up to use HTTPS.  To change this
+to HTTP, you can either change it by doing <code class="docutils literal"><span class="pre">wva.use_https</span> <span class="pre">=</span> <span class="pre">False</span></code> or
+specify <code class="docutils literal"><span class="pre">use_https=False</span></code> when constructing the WVA object.</p>
+<p>The <a class="reference internal" href="api.html"><em>API Documentation</em></a> documentation describes all of the library methods in
+greater detail, including the methods available on the WVA object.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/wva.png" alt="Logo"/>
+    
+    <h1 class="logo logo-name">Python WVA Library</h2>
+    
+  </a>
+</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-cli">Using the CLI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-library">Using the Library</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://www.digi.com/products/wireless-vehicle-bus-adapter/wireless-vehicle-bus-adapter">WVA Homepage</a></li>
+    
+    <li class="toctree-l1"><a href="https://github.com/digidotcom/python-wvalib">Library on Github</a></li>
+    
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Digi International Inc.
+      
+      |
+      <a href="_sources/quickstart.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+
+    
+    <a href="https://github.com/digidotcom/python-wvalib" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>
