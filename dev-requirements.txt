@@ -7,6 +7,12 @@ pyandoc
 nose
 tox
 mock
-coverage
 sphinx
-HTTPretty==0.8.8
+
+# coveralls requires a version >=3.6,<3.999
+coverage==3.7.1
+
+# HTTPPretty has issues with python 3.4.{1,2} in version 0.8.8
+# See http://stackoverflow.com/questions/29298455/httpretty-test-hanging-on-travis
+# and https://github.com/gabrielfalcao/HTTPretty/issues/221
+HTTPretty==0.8.6
