@@ -4,7 +4,7 @@ Python WVA Library
 [![Build Status](https://travis-ci.org/digidotcom/python-wvalib.svg?branch=master)](https://travis-ci.org/digidotcom/python-wvalib)
 [![Latest Version](https://pypip.in/version/wva/badge.svg)](https://pypi.python.org/pypi/wva/)
 [![Supported Python versions](https://pypip.in/py_versions/wva/badge.svg)](https://pypi.python.org/pypi/wva/)
-[![License](https://pypip.in/license/devicecloud/badge.svg)](https://pypi.python.org/pypi/devicecloud/)
+[![License](https://pypip.in/license/wva/badge.svg)](https://pypi.python.org/pypi/wva/)
 
 [Full Documentation](https://digidotcom.github.io/python-wvalib)
 
