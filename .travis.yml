@@ -7,11 +7,9 @@ env:
   - TOX_ENV=py27
   - TOX_ENV=py32
   - TOX_ENV=py33
+  - TOX_ENV=py34
   - TOX_ENV=pypy
   - TOX_ENV=coverage
-
-# py34 disabled due to an issue resulting in hanging builds with
-# certain versions of python 3.4 and use of httpretty
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:

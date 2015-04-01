@@ -8,4 +8,8 @@ nose
 tox
 mock
 sphinx
-HTTPretty==0.8.8
+
+# HTTPPretty has issues with python 3.4.{1,2} in version 0.8.8
+# See http://stackoverflow.com/questions/29298455/httpretty-test-hanging-on-travis
+# and https://github.com/gabrielfalcao/HTTPretty/issues/221
+HTTPretty==0.8.6
