@@ -1,12 +1,11 @@
 Python WVA Library
 ==================
 
-[![Build Status](https://travis-ci.org/digidotcom/python-wvalib.svg?branch=master)](https://travis-ci.org/digidotcom/python-wvalib)
-[![Latest Version](https://pypip.in/version/wva/badge.svg)](https://pypi.python.org/pypi/wva/)
-[![Supported Python versions](https://pypip.in/py_versions/wva/badge.svg)](https://pypi.python.org/pypi/wva/)
-[![License](https://pypip.in/license/wva/badge.svg)](https://pypi.python.org/pypi/wva/)
+[![Build Status](https://img.shields.io/travis/digidotcom/python-wvalib.svg)](https://travis-ci.org/digidotcom/python-wvalib)
+[![Latest Version](https://img.shields.io/pypi/v/wva.svg)](https://pypi.python.org/pypi/wva/)
+[![License](https://img.shields.io/badge/license-MPL%202.0-blue.svg)](https://github.com/digidotcom/python-wvalib/blob/master/LICENSE)
 
-[Full Documentation](https://digidotcom.github.io/python-wvalib)
+* [Full Documentation](https://digidotcom.github.io/python-wvalib)
 
 This library contains a set of classes and functions for performing common
 operations using the WVA Web Services API.  It contains both general
