@@ -2,6 +2,8 @@ Python WVA Library
 ==================
 
 [![Build Status](https://img.shields.io/travis/digidotcom/python-wvalib.svg)](https://travis-ci.org/digidotcom/python-wvalib)
+[![Coverage Status](https://img.shields.io/coveralls/digidotcom/python-wvalib.svg)](https://coveralls.io/r/digidotcom/python-wvalib)
+[![Code Climate](https://img.shields.io/codeclimate/github/digidotcom/python-wvalib.svg)](https://codeclimate.com/github/digidotcom/python-wvalib)
 [![Latest Version](https://img.shields.io/pypi/v/wva.svg)](https://pypi.python.org/pypi/wva/)
 [![License](https://img.shields.io/badge/license-MPL%202.0-blue.svg)](https://github.com/digidotcom/python-wvalib/blob/master/LICENSE)
 
