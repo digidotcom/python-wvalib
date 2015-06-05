@@ -8,9 +8,7 @@ nose
 tox
 mock
 sphinx
-
-# coveralls requires a version >=3.6,<3.999
-coverage==3.7.1
+coverage
 
 # HTTPPretty has issues with python 3.4.{1,2} in version 0.8.8
 # See http://stackoverflow.com/questions/29298455/httpretty-test-hanging-on-travis
