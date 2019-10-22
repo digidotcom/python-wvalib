@@ -1,4 +1,4 @@
 six==1.9.0
-requests==2.6.0
+requests==2.20.0
 click==3.3
 arrow==0.5.4
